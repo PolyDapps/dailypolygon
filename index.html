@@ -3,51 +3,32 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wallet Connect</title>
+  <title>Wallet Connect Test</title>
   <script src="https://unpkg.com/@walletconnect/web3-provider@2.0.0/dist/umd/index.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.9.0/web3.min.js"></script>
 </head>
 <body>
   <button onclick="connect()">Connect Wallet</button>
-  <button onclick="disconnect()">Disconnect Wallet</button>
 
   <script type="text/javascript">
-    let account;
     let provider;
-
-    const initializeProvider = () => {
-      provider = new WalletConnectProvider({
-        rpc: {
-          1: "https://mainnet.infura.io/v3/ee5a337fe17e4c87839b94a7d6804b13", // Mainnet
-          137: "https://rpc-mainnet.maticvigil.com/", // Polygon
-        },
-      });
-    };
 
     const connect = async () => {
       try {
-        if (!provider) initializeProvider(); // Initialize provider if not done
+        // Initialize the provider
+        provider = new WalletConnectProvider({
+          rpc: {
+            1: "https://polygon-mainnet.infura.io/v3/ee5a337fe17e4c87839b94a7d6804b13", // Mainnet
+            137: "https://rpc-mainnet.maticvigil.com/", // Polygon
+          },
+        });
+
         await provider.enable(); // Enable provider
-
         const web3 = new Web3(provider);
-        window.w3 = web3;
-
         const accounts = await web3.eth.getAccounts();
-        account = accounts[0]; // Primary account
-        console.log("Connected account:", account);
+        console.log("Connected account:", accounts[0]);
       } catch (error) {
         console.error("Connection failed:", error);
-      }
-    };
-
-    const disconnect = async () => {
-      try {
-        if (provider) {
-          await provider.disconnect(); // Close provider session
-          console.log("Disconnected");
-        }
-      } catch (error) {
-        console.error("Disconnection failed:", error);
       }
     };
   </script>
