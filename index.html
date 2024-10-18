@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Polygon DApp</title>
-    
+
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
-    <script src="app.js" defer></script>
-    <script src="https://unpkg.com/@walletconnect/client/dist/umd/index.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
     
-    <!-- Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://unpkg.com 'unsafe-eval'; style-src 'self';">
+    <!-- Add nonce for script tags -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js" nonce="your-nonce-value" integrity="sha384-..." crossorigin="anonymous"></script>
+    <script src="app.js" nonce="your-nonce-value" defer></script>
+    <script src="https://unpkg.com/@walletconnect/client/dist/umd/index.min.js" nonce="your-nonce-value" integrity="sha384-..." crossorigin="anonymous"></script>
+
+    <!-- Content Security Policy with nonce -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-your-nonce-value' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self';">
 </head>
 <body>
     <header>
