@@ -16,7 +16,7 @@
     <main>
         <section id="walletConnect">
             <h2>Connect Your Wallet</h2>
-            <button id="connectButton" onclick="connectWallet();">Connect Wallet</button>
+            <button id="connectButton">Connect Wallet</button>
         </section>
         
         <section id="investment">
@@ -34,7 +34,7 @@
         
         <section id="withdraw">
             <h2>Withdraw</h2>
-            <button id="withdrawButton" onclick="confirmWithdrawal();">Withdraw</button>
+            <button id="withdrawButton">Withdraw</button>
         </section>
 
         <section id="userInfo">
@@ -83,6 +83,12 @@
             // Implement withdrawal confirmation logic here
             alert("Withdrawal confirmed!"); // Example alert
         }
+
+        // Add event listeners after the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('connectButton').addEventListener('click', connectWallet);
+            document.getElementById('withdrawButton').addEventListener('click', confirmWithdrawal);
+        });
     </script>
 </body>
 </html>
