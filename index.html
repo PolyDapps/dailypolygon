@@ -6,15 +6,19 @@
     <title>Daily Polygon DApp</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script src="https://unpkg.com/@walletconnect/web3-provider@2.0.0/dist/umd/index.min.js"></script>
     <script src="app.js" defer></script>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline';">
 </head>
 <body>
     <header>
         <h1>Daily Polygon</h1>
     </header>
     <main>
+        <section id="walletConnect">
+            <h2>Connect Your Wallet</h2>
+            <button id="connectButton" onclick="connectWallet();">Connect Wallet</button>
+        </section>
+        
         <section id="investment">
             <h2>Invest for Daily Income, Get Income for Years</h2>
             <form id="investmentForm" onsubmit="return validateForm();">
@@ -48,8 +52,28 @@
     </footer>
 
     <script type="text/javascript">
-        // Placeholder for JavaScript functions
-        
+        let web3;
+        let account;
+
+        // Connect to MetaMask
+        async function connectWallet() {
+            if (window.ethereum) {
+                try {
+                    // Request account access
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    account = accounts[0]; // Get the first account
+                    web3 = new Web3(window.ethereum); // Create Web3 instance with MetaMask provider
+                    
+                    console.log("Connected account:", account);
+                    alert(`Wallet connected: ${account}`);
+                } catch (error) {
+                    console.error("Connection failed:", error);
+                }
+            } else {
+                alert("Please install MetaMask!");
+            }
+        }
+
         function validateForm() {
             // Implement form validation logic here
             return true; // Allow form submission
