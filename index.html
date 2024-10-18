@@ -6,13 +6,11 @@
     <title>Daily Polygon DApp</title>
     <link rel="stylesheet" href="styles.css">
     
-    <!-- Include scripts with nonce for security -->
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js" nonce="your-nonce-value" integrity="sha384-..." crossorigin="anonymous"></script>
-    <script src="app.js" nonce="your-nonce-value" defer></script>
-    <script src="https://unpkg.com/@walletconnect/client/dist/umd/index.min.js" nonce="your-nonce-value" integrity="sha384-..." crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js" integrity="sha384-ActualHashHere" crossorigin="anonymous"></script>
+    <script src="app.js" defer></script>
+    <script src="https://unpkg.com/@walletconnect/client/dist/umd/index.min.js" integrity="sha384-ActualHashHere" crossorigin="anonymous"></script>
 
-    <!-- Define CSP with nonce -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-your-nonce-value' https://cdn.jsdelivr.net https://unpkg.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://raw.githubusercontent.com; script-src 'self' 'nonce-your-nonce-value';">
 </head>
 <body>
     <header>
