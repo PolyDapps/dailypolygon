@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Polygon DApp</title>
     <link rel="stylesheet" href="styles.css">
-    
-    <!-- Include WalletConnect library -->
+    <script src="https://unpkg.com/web3/dist/web3.min.js"></script>
     <script src="https://unpkg.com/@walletconnect/client/dist/umd/index.min.js" crossorigin="anonymous"></script>
-    
-    <!-- Include your custom JavaScript file -->
     <script src="app.js" defer></script>
 </head>
 <body>
@@ -25,7 +22,7 @@
         
         <section id="investment">
             <h2>Invest for Daily Income</h2>
-            <form id="investmentForm" onsubmit="return validateForm();">
+            <form id="investmentForm">
                 <label for="amount">Amount (POL):</label>
                 <input type="number" id="amount" min="1" step="0.01" required>
                 
@@ -38,7 +35,7 @@
         
         <section id="withdraw">
             <h2>Withdraw</h2>
-            <button id="withdrawButton" onclick="confirmWithdrawal();">Withdraw</button>
+            <button id="withdrawButton">Withdraw</button>
         </section>
         
         <section id="userInfo">
