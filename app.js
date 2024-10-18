@@ -19,7 +19,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     connectButton.addEventListener("click", async () => {
         // Initialize WalletConnect Provider
         provider = new WalletConnectProvider({
-            infuraId: "ee5a337fe17e4c87839b94a7d6804b13", // Replace with your Infura ID
+            bridge: "https://bridge.walletconnect.org", // Default bridge
+            rpc: {
+                137: 'https://polygon-mainnet.infura.io/v3/ee5a337fe17e4c87839b94a7d6804b13', // Replace with your Infura project ID
+                80001: 'https://polygon-mumbai.infura.io/v3/ee5a337fe17e4c87839b94a7d6804b13', // Replace with your Infura project ID for Mumbai testnet
+            },
         });
 
         // Connect to the wallet
@@ -42,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         event.preventDefault();
         const amount = document.getElementById("amount").value;
         const referrer = document.getElementById("referrer").value;
-        
+
         try {
             const accounts = await web3.eth.getAccounts();
             const result = await contract.methods.invest(referrer).send({ 
