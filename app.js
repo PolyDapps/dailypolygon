@@ -1,8 +1,33 @@
-// app.js
-
 document.addEventListener('DOMContentLoaded', () => {
     const investmentForm = document.getElementById('investmentForm');
     const withdrawButton = document.getElementById('withdrawButton');
+    const connectButton = document.getElementById('connectButton');
+
+    let connector;
+
+    // Connect to WalletConnect
+    async function connectWallet() {
+        connector = new WalletConnect({
+            bridge: "https://bridge.walletconnect.org", // Bridge server
+            qrcode: true,
+        });
+
+        if (!connector.connected) {
+            await connector.createSession();
+        }
+
+        connector.on("connect", (error, payload) => {
+            if (error) throw error;
+            console.log("Connected accounts:", payload.params[0].accounts);
+        });
+
+        connector.on("disconnect", (error) => {
+            if (error) throw error;
+            console.log("Disconnected");
+        });
+    }
+
+    connectButton.addEventListener('click', connectWallet);
 
     // Handle investment form submission
     investmentForm.addEventListener('submit', async (event) => {
@@ -55,8 +80,14 @@ document.addEventListener('DOMContentLoaded', () => {
     async function withdraw() {
         console.log('Withdrawing...');
         try {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            const account = accounts[0];
+            let account;
+            if (connector && connector.connected) {
+                const accounts = connector.accounts;
+                account = accounts[0];
+            } else {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                account = accounts[0];
+            }
 
             // Call your smart contract's withdraw method here
             const contract = new web3.eth.Contract(contractABI, contractAddress);
