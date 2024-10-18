@@ -6,33 +6,44 @@
     <title>Daily Polygon DApp</title>
     <link rel="stylesheet" href="styles.css">
     
+    <!-- Include WalletConnect library -->
     <script src="https://unpkg.com/@walletconnect/client/dist/umd/index.min.js" crossorigin="anonymous"></script>
+    
+    <!-- Include your custom JavaScript file -->
     <script src="app.js" defer></script>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://raw.githubusercontent.com; script-src 'self' 'nonce-your-nonce-value';">
+    
+    <!-- Content Security Policy for enhanced security -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://raw.githubusercontent.com; script-src 'self' 'unsafe-inline';">
 </head>
 <body>
     <header>
         <h1>Daily Polygon</h1>
     </header>
+    
     <main>
         <section id="walletConnect">
-            <h2>Connect your Wallet</h2>
+            <h2>Connect Your Wallet</h2>
             <button id="connectButton">Connect with WalletConnect</button>
         </section>
+        
         <section id="investment">
             <h2>Invest for Daily Income</h2>
             <form id="investmentForm" onsubmit="return validateForm();">
                 <label for="amount">Amount (POL):</label>
                 <input type="number" id="amount" min="1" step="0.01" required>
+                
                 <label for="referrer">Referrer Address:</label>
                 <input type="text" id="referrer" placeholder="Optional">
+                
                 <button type="submit">Invest</button>
             </form>
         </section>
+        
         <section id="withdraw">
             <h2>Withdraw</h2>
             <button id="withdrawButton" onclick="confirmWithdrawal();">Withdraw</button>
         </section>
+        
         <section id="userInfo">
             <h2>Your Info</h2>
             <div>
@@ -42,6 +53,7 @@
             </div>
         </section>
     </main>
+    
     <footer>
         <p>&copy; 2024 Daily Polygon DApp</p>
     </footer>
