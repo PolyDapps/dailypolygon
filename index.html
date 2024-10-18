@@ -16,9 +16,9 @@
     let provider;
 
     const initializeProvider = () => {
-      provider = new window.WalletConnectProvider.default({
+      provider = new WalletConnectProvider({
         rpc: {
-          1: "https://api.polygonscan.com/MS5TGWX1PK9131P621RUATWWXH16QEH9Z7", // Mainnet
+          1: "https://mainnet.infura.io/v3/ee5a337fe17e4c87839b94a7d6804b13", // Mainnet
           137: "https://rpc-mainnet.maticvigil.com/", // Polygon
         },
       });
