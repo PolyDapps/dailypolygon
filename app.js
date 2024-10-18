@@ -1,9 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
     const investmentForm = document.getElementById('investmentForm');
     const withdrawButton = document.getElementById('withdrawButton');
     const connectButton = document.getElementById('connectButton');
 
-    // Define the smart contract's ABI and address
     const contractABI = [
         {"inputs":[{"internalType":"address","name":"_wallet1","type":"address"},{"internalType":"address","name":"_wallet2","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},
         {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint8","name":"plan","type":"uint8"},{"indexed":false,"internalType":"uint256","name":"percent","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"profit","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"start","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"finish","type":"uint256"}],"name":"NewDeposit","type":"event"},
@@ -13,11 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // ... (other ABI elements) ...
         {"inputs":[],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"}
     ];
-    
-    const contractAddress = '0x0d7A25d695952E8815f6aE99c210Dee687528679'; // Replace with your actual contract address
+    const contractAddress = '0x0d7A25d695952E8815f6aE99c210Dee687528679';
 
     let connector;
+    let web3;
 
+    // Connect to WalletConnect
     async function connectWallet() {
         connector = new WalletConnect({
             bridge: "https://bridge.walletconnect.org",
@@ -28,12 +28,18 @@ document.addEventListener('DOMContentLoaded', () => {
             await connector.createSession();
         }
 
-        connector.on("connect", (error, payload) => {
+        connector.on("connect", async (error, payload) => {
             if (error) {
                 console.error("Connection error:", error);
                 return;
             }
-            console.log("Connected accounts:", payload.params[0].accounts);
+            const { accounts } = payload.params[0];
+            console.log("Connected accounts:", accounts);
+
+            // Initialize Web3
+            web3 = new Web3(connector);
+
+            // Update UI or fetch user info here
         });
 
         connector.on("disconnect", (error) => {
@@ -78,17 +84,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function withdraw() {
-        console.log('Withdrawing...');
+    async function invest(amount, referrer) {
         try {
-            let account;
+            const accounts = await connector.getAccounts();
+            const account = accounts[0];
 
-            if (connector && connector.connected) {
-                account = connector.accounts[0];
-            } else {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                account = accounts[0];
-            }
+            const contract = new web3.eth.Contract(contractABI, contractAddress);
+            const result = await contract.methods.invest(referrer).send({ from: account, value: web3.utils.toWei(amount.toString(), 'ether') });
+
+            console.log("Investment successful:", result);
+            alert("Investment successful!");
+        } catch (error) {
+            console.error('Investment error:', error);
+            alert("Investment failed.");
+        }
+    }
+
+    async function withdraw() {
+        try {
+            const accounts = await connector.getAccounts();
+            const account = accounts[0];
 
             const contract = new web3.eth.Contract(contractABI, contractAddress);
             const result = await contract.methods.withdraw().send({ from: account });
@@ -96,12 +111,11 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Withdrawal successful:", result);
             alert("Withdrawal successful!");
         } catch (error) {
-            console.error('Withdrawal failed:', error);
-            alert("Withdrawal failed. Please try again.");
+            console.error('Withdrawal error:', error);
+            alert("Withdrawal failed.");
         }
     }
 
     async function updateUserInfo() {
-        // Logic to retrieve and update user info from the smart contract
     }
 });
