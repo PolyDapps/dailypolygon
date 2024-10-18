@@ -56,14 +56,14 @@
         let provider;
 
         // Smart contract ABI and address
-        const contractAddress = "0xYourContractAddress"; // Replace with your contract address
+        const contractAddress = "0x0d7A25d695952E8815f6aE99c210Dee687528679"; // Replace with your contract address
         const abi = [/* Your contract ABI here */];
 
         document.getElementById('connectButton').onclick = async () => {
             // Initialize WalletConnect Provider
             provider = new WalletConnectProvider.default({
                 rpc: {
-                    137: "https://polygon-rpc.com/", // Polygon mainnet
+                    137: "https://polygon-mainnet.infura.io/v3/ee5a337fe17e4c87839b94a7d6804b13", // Polygon mainnet
                 },
             });
             await provider.enable();
