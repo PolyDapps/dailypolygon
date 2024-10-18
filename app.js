@@ -18,10 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let connector;
 
-    // Connect to WalletConnect
     async function connectWallet() {
         connector = new WalletConnect({
-            bridge: "https://bridge.walletconnect.org", // Bridge server
+            bridge: "https://bridge.walletconnect.org",
             qrcode: true,
         });
 
@@ -29,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
             await connector.createSession();
         }
 
-        // Listen for connection events
         connector.on("connect", (error, payload) => {
             if (error) {
                 console.error("Connection error:", error);
@@ -47,13 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Event listener for the connect button
     connectButton.addEventListener('click', connectWallet);
 
-    // Handle investment form submission
     investmentForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-
         const amount = parseFloat(document.getElementById('amount').value);
         const referrer = document.getElementById('referrer').value;
 
@@ -67,10 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Handle withdrawal button click
     withdrawButton.addEventListener('click', confirmWithdrawal);
 
-    // Validate investment amount
     function validateAmount(amount) {
         if (amount <= 0 || isNaN(amount)) {
             alert("Please enter a valid amount.");
@@ -79,20 +72,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return true;
     }
 
-    // Confirm withdrawal action
     function confirmWithdrawal() {
         if (confirm("Are you sure you want to withdraw?")) {
             withdraw();
         }
     }
 
-    // Withdraw function implementation
     async function withdraw() {
         console.log('Withdrawing...');
         try {
             let account;
 
-            // Check if connected via WalletConnect
             if (connector && connector.connected) {
                 account = connector.accounts[0];
             } else {
@@ -100,10 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 account = accounts[0];
             }
 
-            // Create a contract instance
             const contract = new web3.eth.Contract(contractABI, contractAddress);
-            
-            // Call the withdraw method on the smart contract
             const result = await contract.methods.withdraw().send({ from: account });
 
             console.log("Withdrawal successful:", result);
@@ -114,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Update user information (to be implemented)
     async function updateUserInfo() {
         // Logic to retrieve and update user info from the smart contract
     }
