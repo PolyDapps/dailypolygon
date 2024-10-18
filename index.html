@@ -6,7 +6,7 @@
     <title>Daily Polygon DApp</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script src="app.js" defer></script>
+    <script src="app.js" type="module" defer></script>
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline';">
 </head>
 <body>
@@ -50,45 +50,5 @@
     <footer>
         <p>&copy; 2024 Daily Polygon DApp</p>
     </footer>
-
-    <script type="text/javascript">
-        let web3;
-        let account;
-
-        // Connect to MetaMask
-        async function connectWallet() {
-            if (window.ethereum) {
-                try {
-                    // Request account access
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    account = accounts[0]; // Get the first account
-                    web3 = new Web3(window.ethereum); // Create Web3 instance with MetaMask provider
-                    
-                    console.log("Connected account:", account);
-                    alert(`Wallet connected: ${account}`);
-                } catch (error) {
-                    console.error("Connection failed:", error);
-                }
-            } else {
-                alert("Please install MetaMask!");
-            }
-        }
-
-        function validateForm() {
-            // Implement form validation logic here
-            return true; // Allow form submission
-        }
-
-        function confirmWithdrawal() {
-            // Implement withdrawal confirmation logic here
-            alert("Withdrawal confirmed!"); // Example alert
-        }
-
-        // Add event listeners after the DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('connectButton').addEventListener('click', connectWallet);
-            document.getElementById('withdrawButton').addEventListener('click', confirmWithdrawal);
-        });
-    </script>
 </body>
 </html>
