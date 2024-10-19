@@ -1,10 +1,10 @@
+import { createThirdwebClient } from "thirdweb";
+import { ConnectButton } from "thirdweb/react";
+import { createWallet } from "thirdweb/wallets";
 import { Network, Alchemy } from 'alchemy-sdk';
 
 const contractAddress = '0x0d7A25d695952E8815f6aE99c210Dee687528679'; // Your contract address
 const apiKey = 'MS5TGWX1PK9131P621RUATWWXH16QEH9Z7'; // Your Polygonscan API key
-let web3;
-let contract;
-let userAccount; // Store user account globally
 
 const settings = {
   apiKey: "ezF3VDoQIZi2a3muxc7B1ybAviBocfrg",
@@ -12,6 +12,21 @@ const settings = {
 };
 
 const alchemy = new Alchemy(settings);
+const client = createThirdwebClient({
+  clientId: "aa83552f8db8c2d86a9c06a13e113b0e",
+});
+
+const wallets = [
+  createWallet("io.metamask"),
+  createWallet("com.coinbase.wallet"),
+  createWallet("me.rainbow"),
+  createWallet("io.rabby"),
+  createWallet("io.zerion.wallet"),
+];
+
+let web3;
+let contract;
+let userAccount; // Store user account globally
 
 async function getContractABI() {
     const response = await fetch(`https://api.polygonscan.com/api?module=contract&action=getabi&address=${contractAddress}&apikey=${apiKey}`);
@@ -21,40 +36,6 @@ async function getContractABI() {
         return JSON.parse(data.result); // The ABI will be in JSON format
     } else {
         throw new Error("Failed to fetch ABI: " + data.message);
-    }
-}
-
-async function connectWallet() {
-    const provider = new WalletConnectProvider.default({
-        rpc: {
-            137: settings.apiKey, // Using the Alchemy API Key for RPC
-        },
-    });
-
-    try {
-        await provider.enable(); // Enable session (triggers QR Code modal)
-    } catch (error) {
-        if (error.message.includes("User closed modal")) {
-            console.warn("User canceled the wallet connection.");
-            alert("Connection to wallet was canceled. Please try again.");
-            return null; // Exit the function
-        } else {
-            console.error("Error connecting to wallet:", error);
-            alert("Error connecting to wallet: " + error.message);
-            return null; // Exit the function
-        }
-    }
-
-    web3 = new Web3(provider); // Initialize Web3 with the WalletConnect provider
-
-    try {
-        const accounts = await web3.eth.getAccounts(); // Fetch connected accounts
-        console.log("Connected account:", accounts[0]);
-        return accounts[0]; // Return the connected account
-    } catch (error) {
-        console.error("Error fetching accounts:", error);
-        alert("Error fetching accounts: " + error.message);
-        return null; // Exit the function
     }
 }
 
@@ -77,13 +58,10 @@ async function init() {
     const abi = await getContractABI(); // Get the contract ABI
     contract = new web3.eth.Contract(abi, contractAddress); // Create a contract instance
 
-    // Set up the wallet connect button
-    document.getElementById('connectButton').addEventListener('click', async () => {
-        userAccount = await connectWallet(); // Connect the wallet
-        if (userAccount) {
-            await updateUserInfo(userAccount); // Update user info after connecting wallet
-        }
-    });
+    // Update user info after connecting wallet
+    if (userAccount) {
+        await updateUserInfo(userAccount);
+    }
 
     document.getElementById('investmentForm').addEventListener('submit', async (event) => {
         event.preventDefault(); // Prevent default form submission
@@ -131,4 +109,24 @@ async function init() {
     });
 }
 
-window.onload = init; // Initialize the application when the window loads
+// Add the ConnectButton to your HTML
+function renderConnectButton() {
+    const connectButtonContainer = document.getElementById('connectButtonContainer');
+    connectButtonContainer.innerHTML = `<div id="connect-button"></div>`;
+    
+    // Render the ConnectButton
+    const connectButton = <ConnectButton
+        client={client}
+        wallets={wallets}
+        connectModal={{ size: "compact" }}
+        onConnect={(account) => {
+            userAccount = account.address; // Get the connected account address
+            init(); // Initialize the DApp with the connected account
+        }}
+    />;
+    ReactDOM.render(connectButton, document.getElementById('connect-button'));
+}
+
+window.onload = () => {
+    renderConnectButton(); // Render the ConnectButton when the window loads
+};
