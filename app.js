@@ -1,82 +1,55 @@
-import React, { useState } from "react";
-import { prepareContractCall, sendTransaction } from "thirdweb";
+import { createThirdwebClient } from "thirdweb";
+import { ConnectButton } from "thirdweb/react";
+import { createWallet } from "thirdweb/wallets";
 
-function ContractInteraction({ contract, account }) {
-  const [referrer, setReferrer] = useState("");
-  const [transactionHash, setTransactionHash] = useState("");
-  const [error, setError] = useState("");
+// Create a Thirdweb client with your clientId
+const client = createThirdwebClient({
+  clientId: "aa83552f8db8c2d86a9c06a13e113b0e", // Replace with your clientId
+});
 
-  const invest = async () => {
-    try {
-      const transaction = await prepareContractCall({
-        contract,
-        method: "invest", // Method name only
-        params: [referrer],
-      });
+// Define the wallets to support
+const wallets = [
+  createWallet("io.metamask"),
+  createWallet("com.coinbase.wallet"),
+  createWallet("me.rainbow"),
+  createWallet("com.trustwallet.app"),
+  createWallet("com.okex.wallet"),
+  createWallet("com.safepal"),
+  createWallet("pro.tokenpocket"),
+  createWallet("com.bitget.web3"),
+];
 
-      const { transactionHash } = await sendTransaction({
-        transaction,
-        account,
-      });
-
-      setTransactionHash(transactionHash);
-      console.log("Investment transaction sent! Hash:", transactionHash);
-    } catch (err) {
-      console.error("Investment transaction failed:", err);
-      setError("Investment transaction failed: " + err.message);
-    }
-  };
-
-  const withdraw = async () => {
-    try {
-      const transaction = await prepareContractCall({
-        contract,
-        method: "withdraw", // Method name only
-        params: [],
-      });
-
-      const { transactionHash } = await sendTransaction({
-        transaction,
-        account,
-      });
-
-      setTransactionHash(transactionHash);
-      console.log("Withdrawal transaction sent! Hash:", transactionHash);
-    } catch (err) {
-      console.error("Withdrawal transaction failed:", err);
-      setError("Withdrawal transaction failed: " + err.message);
-    }
-  };
-
+// Example component for wallet connection
+function Example() {
   return (
-    <div>
-      <h1>Contract Interaction</h1>
-      
-      <div>
-        <h2>Invest</h2>
-        <input
-          type="text"
-          value={referrer}
-          onChange={(e) => setReferrer(e.target.value)}
-          placeholder="Referrer Address"
-        />
-        <button onClick={invest}>Invest</button>
-      </div>
-      
-      <div>
-        <h2>Withdraw</h2>
-        <button onClick={withdraw}>Withdraw</button>
-      </div>
-
-      {transactionHash && (
-        <p>Transaction Hash: {transactionHash}</p>
-      )}
-      
-      {error && (
-        <p style={{ color: "red" }}>{error}</p>
-      )}
-    </div>
+    <ConnectButton
+      client={client}
+      wallets={wallets}
+      connectButton={{ label: "Connect Wallet" }}
+      connectModal={{
+        size: "compact",
+        showThirdwebBranding: false,
+      }}
+      auth={{
+        async doLogin(params) {
+          // Call your backend to verify the signed payload passed in params
+          // Implement your login logic here
+        },
+        async doLogout() {
+          // Call your backend to logout the user if needed
+          // Implement your logout logic here
+        },
+        async getLoginPayload(params) {
+          // Call your backend and return the payload for login
+          // Implement your payload logic here
+        },
+        async isLoggedIn() {
+          // Call your backend to check if the user is logged in
+          // Implement your check logic here
+        },
+      }}
+    />
   );
 }
 
-export default ContractInteraction;
+export default Example;
