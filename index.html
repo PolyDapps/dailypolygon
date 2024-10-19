@@ -3,53 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Polygon DApp</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script src="https://unpkg.com/@walletconnect/web3-provider/dist/umd/index.min.js"></script>
-    <script src="app.js" type="module" defer></script>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline';">
+    <title>Contract Interaction</title>
+    <script src="https://cdn.jsdelivr.net/npm/thirdweb@latest/dist/thirdweb.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, button {
+            margin: 10px 0;
+        }
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Daily Polygon</h1>
-    </header>
-    <main>
-        <section id="walletConnect">
-            <h2>Connect Your Wallet</h2>
-            <button id="connectButton">Connect Wallet</button>
-        </section>
-        
-        <section id="investment">
-            <h2>Invest for Daily Income, Get Income for Years</h2>
-            <form id="investmentForm">
-                <label for="amount">Amount (POL):</label>
-                <input type="number" id="amount" min="1" step="0.01" required>
-                
-                <label for="referrer">Referrer Address:</label>
-                <input type="text" id="referrer" placeholder="Optional">
-                
-                <button type="submit">Invest</button>
-            </form>
-        </section>
-        
-        <section id="withdraw">
-            <h2>Withdraw</h2>
-            <button id="withdrawButton">Withdraw</button>
-        </section>
 
-        <section id="userInfo">
-            <h2>Your Info</h2>
-            <div>
-                <p>Total Deposits: <span id="totalDeposits">0</span> POL</p>
-                <p>Total Withdrawn: <span id="totalWithdrawn">0</span> POL</p>
-                <p>Available for Withdrawal: <span id="availableBalance">0</span> POL</p>
-            </div>
-        </section>
-    </main>
-    
-    <footer>
-        <p>&copy; 2024 Daily Polygon DApp</p>
-    </footer>
+    <h1>Contract Interaction</h1>
+
+    <div>
+        <h2>Invest</h2>
+        <input type="text" id="referrer" placeholder="Referrer Address" />
+        <button onclick="invest()">Invest</button>
+    </div>
+
+    <div>
+        <h2>Withdraw</h2>
+        <button onclick="withdraw()">Withdraw</button>
+    </div>
+
+    <p id="transactionHash"></p>
+    <p id="error" class="error"></p>
+
+    <script>
+        const contractAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with your contract address
+        const account = 'YOUR_ACCOUNT_ADDRESS'; // Replace with the user's account address
+
+        const { createThirdwebClient } = window.thirdweb;
+        const client = createThirdwebClient({ clientId: 'aa83552f8db8c2d86a9c06a13e113b0e' }); // Replace with your client ID
+
+        const contract = client.getContract(contractAddress);
+
+        async function invest() {
+            const referrer = document.getElementById('referrer').value;
+            try {
+                const transaction = await contract.call("invest", referrer);
+                const transactionHash = transaction.hash;
+                document.getElementById('transactionHash').innerText = "Transaction sent! Hash: " + transactionHash;
+            } catch (error) {
+                console.error("Investment transaction failed:", error);
+                document.getElementById('error').innerText = "Investment transaction failed: " + error.message;
+            }
+        }
+
+        async function withdraw() {
+            try {
+                const transaction = await contract.call("withdraw");
+                const transactionHash = transaction.hash;
+                document.getElementById('transactionHash').innerText = "Transaction sent! Hash: " + transactionHash;
+            } catch (error) {
+                console.error("Withdrawal transaction failed:", error);
+                document.getElementById('error').innerText = "Withdrawal transaction failed: " + error.message;
+            }
+        }
+    </script>
+
 </body>
 </html>
