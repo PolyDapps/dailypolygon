@@ -1,6 +1,9 @@
+import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { createThirdwebClient } from "thirdweb";
 import { ConnectButton } from "thirdweb/react";
 import { createWallet } from "thirdweb/wallets";
+import { ThirdwebProvider } from "thirdweb/react";
 
 // Create a Thirdweb client with your clientId
 const client = createThirdwebClient({
@@ -19,37 +22,66 @@ const wallets = [
   createWallet("com.bitget.web3"),
 ];
 
-// Example component for wallet connection
-function Example() {
+// Main App component
+function App() {
+  const [account, setAccount] = useState(null);
+
+  useEffect(() => {
+    // This effect can be used to fetch account info on mount
+    if (account) {
+      // Fetch user data here, if needed
+    }
+  }, [account]);
+
   return (
-    <ConnectButton
-      client={client}
-      wallets={wallets}
-      connectButton={{ label: "Connect Wallet" }}
-      connectModal={{
-        size: "compact",
-        showThirdwebBranding: false,
-      }}
-      auth={{
-        async doLogin(params) {
-          // Call your backend to verify the signed payload passed in params
-          // Implement your login logic here
-        },
-        async doLogout() {
-          // Call your backend to logout the user if needed
-          // Implement your logout logic here
-        },
-        async getLoginPayload(params) {
-          // Call your backend and return the payload for login
-          // Implement your payload logic here
-        },
-        async isLoggedIn() {
-          // Call your backend to check if the user is logged in
-          // Implement your check logic here
-        },
-      }}
-    />
+    <ThirdwebProvider client={client}>
+      <header>
+        <h1>Daily Polygon</h1>
+        <ConnectButton
+          client={client}
+          wallets={wallets}
+          connectButton={{ label: "Connect Wallet" }}
+          connectModal={{
+            size: "compact",
+            showThirdwebBranding: false,
+          }}
+          onConnect={(address) => setAccount(address)}
+          onDisconnect={() => setAccount(null)}
+        />
+      </header>
+      <main>
+        <section id="investment">
+          <h2>Invest for daily income, get income for years</h2>
+          <form id="investmentForm" onSubmit={validateForm}>
+            <label htmlFor="amount">Amount (POL):</label>
+            <input type="number" id="amount" min="1" step="0.01" required />
+            <label htmlFor="referrer">Referrer Address:</label>
+            <input type="text" id="referrer" placeholder="Optional" />
+            <button type="submit">Invest</button>
+          </form>
+        </section>
+
+        <section id="withdraw">
+          <h2>Withdraw</h2>
+          <button id="withdrawButton" onClick={confirmWithdrawal}>
+            Withdraw
+          </button>
+        </section>
+
+        <section id="userInfo">
+          <h2>Your Info</h2>
+          <div>
+            <p>Total Deposits: <span id="totalDeposits">0</span> POL</p>
+            <p>Total Withdrawn: <span id="totalWithdrawn">0</span> POL</p>
+            <p>Available for Withdrawal: <span id="availableBalance">0</span> POL</p>
+          </div>
+        </section>
+      </main>
+      <footer>
+        <p>&copy; 2024 Daily Polygon DApp</p>
+      </footer>
+    </ThirdwebProvider>
   );
 }
 
-export default Example;
+ReactDOM.render(<App />, document.getElementById('root'));
