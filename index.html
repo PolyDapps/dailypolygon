@@ -25,25 +25,35 @@
     <div>
         <h2>Invest</h2>
         <input type="text" id="referrer" placeholder="Referrer Address" />
-        <button onclick="invest()">Invest</button>
+        <button id="investButton">Invest</button>
     </div>
 
     <div>
         <h2>Withdraw</h2>
-        <button onclick="withdraw()">Withdraw</button>
+        <button id="withdrawButton">Withdraw</button>
     </div>
 
     <p id="transactionHash"></p>
     <p id="error" class="error"></p>
 
     <script>
-        const contractAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with your contract address
-        const account = 'YOUR_ACCOUNT_ADDRESS'; // Replace with the user's account address
+        let contract;
+        let account;
+        const client = createThirdwebClient({ clientId: 'YOUR_CLIENT_ID' }); // Default client ID
 
-        const { createThirdwebClient } = window.thirdweb;
-        const client = createThirdwebClient({ clientId: 'aa83552f8db8c2d86a9c06a13e113b0e' }); // Replace with your client ID
+        // Function to initialize contract and account
+        async function initialize(contractAddress, userAccount) {
+            try {
+                account = userAccount; // Set the user account
+                contract = await client.getContract(contractAddress); // Initialize the contract
 
-        const contract = client.getContract(contractAddress);
+                document.getElementById('investButton').onclick = invest;
+                document.getElementById('withdrawButton').onclick = withdraw;
+            } catch (error) {
+                console.error("Initialization failed:", error);
+                document.getElementById('error').innerText = "Initialization failed: " + error.message;
+            }
+        }
 
         async function invest() {
             const referrer = document.getElementById('referrer').value;
@@ -67,6 +77,13 @@
                 document.getElementById('error').innerText = "Withdrawal transaction failed: " + error.message;
             }
         }
+
+        // Call the initialize function with your parameters
+        window.onload = function() {
+            const contractAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with your contract address
+            const userAccount = 'YOUR_ACCOUNT_ADDRESS'; // Replace with the user's account address
+            initialize(contractAddress, userAccount);
+        };
     </script>
 
 </body>
