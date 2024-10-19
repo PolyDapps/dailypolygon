@@ -1,8 +1,17 @@
+import { Network, Alchemy } from 'alchemy-sdk';
+
 const contractAddress = '0x0d7A25d695952E8815f6aE99c210Dee687528679'; // Your contract address
 const apiKey = 'MS5TGWX1PK9131P621RUATWWXH16QEH9Z7'; // Your Polygonscan API key
 let web3;
 let contract;
 let userAccount; // Store user account globally
+
+const settings = {
+  apiKey: "ezF3VDoQIZi2a3muxc7B1ybAviBocfrg",
+  network: Network.MATIC_MAINNET,
+};
+
+const alchemy = new Alchemy(settings);
 
 async function getContractABI() {
     const response = await fetch(`https://api.polygonscan.com/api?module=contract&action=getabi&address=${contractAddress}&apikey=${apiKey}`);
@@ -18,7 +27,7 @@ async function getContractABI() {
 async function connectWallet() {
     const provider = new WalletConnectProvider.default({
         rpc: {
-            137: "https://polygon-mainnet.g.alchemy.com/v2/ezF3VDoQIZi2a3muxc7B1ybAviBocfrg", // Alchemy Polygon Mainnet RPC
+            137: settings.apiKey, // Using the Alchemy API Key for RPC
         },
     });
 
