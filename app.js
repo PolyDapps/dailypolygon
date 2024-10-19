@@ -58,13 +58,11 @@ async function init() {
         }
 
         try {
-            // Show loading indication
-            console.log("Investing...");
+            console.log(`Investing ${amount} POL with referrer: ${referrer}`);
             const result = await contract.methods.invest(referrer).send({ from: account, value: web3.utils.toWei(amount, 'ether') });
             console.log("Investment successful:", result);
             alert("Investment successful!");
-            // Update user info after investment
-            await updateUserInfo(account);
+            await updateUserInfo(account); // Update user info after investment
         } catch (error) {
             console.error("Investment failed:", error);
             alert("Investment failed: " + error.message);
@@ -73,13 +71,11 @@ async function init() {
 
     document.getElementById('withdrawButton').addEventListener('click', async () => {
         try {
-            // Show loading indication
             console.log("Withdrawing...");
             const result = await contract.methods.withdraw().send({ from: account });
             console.log("Withdraw successful:", result);
             alert("Withdrawal successful!");
-            // Update user info after withdrawal
-            await updateUserInfo(account);
+            await updateUserInfo(account); // Update user info after withdrawal
         } catch (error) {
             console.error("Withdrawal failed:", error);
             alert("Withdrawal failed: " + error.message);
