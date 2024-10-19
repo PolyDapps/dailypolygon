@@ -17,7 +17,7 @@ async function getContractABI() {
 async function connectWallet() {
     const provider = new WalletConnectProvider.default({
         rpc: {
-            137: "https://matic-mainnet.chainstacklabs.com", // Polygon Mainnet
+            137: "https://rpc-mainnet.matic.network", // Polygon Mainnet
         },
     });
 
