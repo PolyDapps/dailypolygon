@@ -5,23 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Polygon DApp</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/@thirdweb-dev/sdk@latest/dist/thirdweb-sdk.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/thirdweb-react@latest/dist/thirdweb-react.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://unpkg.com/@thirdweb-dev/sdk/dist/thirdweb.min.js"></script> <!-- Include Thirdweb SDK -->
+    <script src="app.js" defer></script>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline';">
 </head>
 <body>
     <header>
         <h1>Daily Polygon</h1>
     </header>
     <main>
-        <button id="connectButton">Connect Wallet</button>
-        <p>Your Address: <span id="walletAddress">Not Connected</span></p>
         <section id="investment">
-            <h2>Invest for Daily Income</h2>
-            <form id="investmentForm">
+            <h2>Invest for daily income, get income for years</h2>
+            <form id="investmentForm" onsubmit="return validateForm();">
                 <label for="amount">Amount (POL):</label>
                 <input type="number" id="amount" min="1" step="0.01" required>
+                <label for="referrer">Referrer Address:</label>
+                <input type="text" id="referrer" placeholder="Optional">
                 <button type="submit">Invest</button>
             </form>
+        </section>
+        
+        <section id="withdraw">
+            <h2>Withdraw</h2>
+            <button id="withdrawButton" onclick="confirmWithdrawal();">Withdraw</button>
+        </section>
+
+        <section id="userInfo">
+            <h2>Your Info</h2>
+            <div>
+                <p>Total Deposits: <span id="totalDeposits">0</span> POL</p>
+                <p>Total Withdrawn: <span id="totalWithdrawn">0</span> POL</p>
+                <p>Available for Withdrawal: <span id="availableBalance">0</span> POL</p>
+            </div>
+        </section>
+        
+        <section id="connectSection">
+            <button id="connectButton">Connect Wallet</button>
+            <p>Your Address: <span id="walletAddress">Not Connected</span></p>
         </section>
     </main>
     
@@ -30,7 +51,7 @@
     </footer>
 
     <script>
-        const { createThirdwebClient, ConnectButton, ThirdwebProvider } = window.Thirdweb;
+        const { createThirdwebClient } = window.Thirdweb;
 
         const client = createThirdwebClient({
             clientId: "aa83552f8db8c2d86a9c06a13e113b0e", // Replace with your clientId
@@ -48,36 +69,31 @@
               createWallet("com.bitget.web3"),
             ];
 
-            const connectButton = new ConnectButton({
-                client,
-                wallets,
-            });
-
             await client.connect(wallets);
-        const signer = client.getSigner();
-        const address = await signer.getAddress();
-        document.getElementById('walletAddress').innerText = address;
-    }
-
-    document.getElementById('connectButton').onclick = connectWallet;
-
-    document.getElementById('investmentForm').onsubmit = async (e) => {
-        e.preventDefault();
-        const amount = document.getElementById('amount').value;
-
-        try {
-            const contract = await client.getContract("0x0d7A25d695952E8815f6aE99c210Dee687528679"); // Your contract address
-            const referrer = ""; // Get referrer address if needed
-
-            // Call the invest function on the smart contract
-            const tx = await contract.call("invest", referrer, {
-                value: client.utils.parseUnits(amount, 'ether') // Convert POL to wei
-            });
-            await tx.wait(); // Wait for the transaction to be mined
-            console.log(`Successfully invested ${amount} POL`);
-        } catch (error) {
-            console.error("Investment failed:", error);
+            const signer = client.getSigner();
+            const address = await signer.getAddress();
+            document.getElementById('walletAddress').innerText = address;
         }
+
+        document.getElementById('connectButton').onclick = connectWallet;
+
+        document.getElementById('investmentForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const amount = document.getElementById('amount').value;
+
+            try {
+                const contract = await client.getContract("0x0d7A25d695952E8815f6aE99c210Dee687528679"); // Your contract address
+                const referrer = document.getElementById('referrer').value || ""; // Get referrer address
+
+                // Call the invest function on the smart contract
+                const tx = await contract.call("invest", referrer, {
+                    value: client.utils.parseUnits(amount, 'ether') // Convert POL to wei
+                });
+                await tx.wait(); // Wait for the transaction to be mined
+                console.log(`Successfully invested ${amount} POL`);
+            } catch (error) {
+                console.error("Investment failed:", error);
+            }
         };
     </script>
 </body>
