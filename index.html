@@ -39,7 +39,7 @@
     <script>
         let contract;
         let account;
-        const client = createThirdwebClient({ clientId: 'YOUR_CLIENT_ID' }); // Default client ID
+        const client = createThirdwebClient({ clientId: 'aa83552f8db8c2d86a9c06a13e113b0e' }); // Default client ID
 
         // Function to initialize contract and account
         async function initialize(contractAddress, userAccount) {
@@ -80,9 +80,8 @@
 
         // Call the initialize function with your parameters
         window.onload = function() {
-            const contractAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with your contract address
-            const userAccount = 'YOUR_ACCOUNT_ADDRESS'; // Replace with the user's account address
-            initialize(contractAddress, userAccount);
+    const contractAddress = '0x0d7A25d695952E8815f6aE99c210Dee687528679';
+    initialize(contractAddress);
         };
     </script>
 
