@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    import { createConfig, http } from '@wagmi/core'
-import { mainnet, sepolia } from '@wagmi/core/chains'
-import { metaMask } from '@wagmi/connectors'
-
-export const config = createConfig({
-  chains: [mainnet, sepolia],
-  connectors: [metaMask()],
-  transports: {
-    [mainnet.id]: http(https://polygon-mainnet.infura.io/v3/ee5a337fe17e4c87839b94a7d6804b13),
-    [sepolia.id]: http(https://linea-sepolia.infura.io/v3/ee5a337fe17e4c87839b94a7d6804b13),
-  },
-})
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Polygon DApp</title>
@@ -24,13 +12,24 @@ export const config = createConfig({
     <!-- Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' js.stripe.com code.jquery.com cdn.jsdelivr.net maps.googleapis.com 'unsafe-inline';">
     <meta content="text/html; charset=utf-8 ;script-src 'self' cdn.jsdelivr.net unpkg.com 'unsafe-inline' 'unsafe-eval';" http-equiv="content-type">
-
 </head>
 <body>
     <header>
         <h1>Daily Polygon</h1>
     </header>
     <main>
+        import { createConfig, http } from '@wagmi/core'
+        import { mainnet, sepolia } from '@wagmi/core/chains'
+        import { metaMask } from '@wagmi/connectors'
+
+        export const config = createConfig({
+          chains: [mainnet, sepolia],
+          connectors: [metaMask()],
+          transports: {
+            [mainnet.id]: http(https://polygon-mainnet.infura.io/v3/ee5a337fe17e4c87839b94a7d6804b13),
+            [sepolia.id]: http(https://linea-sepolia.infura.io/v3/ee5a337fe17e4c87839b94a7d6804b13),
+  },
+})
         <section id="investment">
             <h2>Invest for daily income, get income for years</h2>
             <form id="investmentForm">
