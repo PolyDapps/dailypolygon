@@ -18,18 +18,6 @@
         <h1>Daily Polygon</h1>
     </header>
     <main>
-        import { createConfig, http } from '@wagmi/core'
-        import { mainnet, sepolia } from '@wagmi/core/chains'
-        import { metaMask } from '@wagmi/connectors'
-
-        export const config = createConfig({
-          chains: [mainnet, sepolia],
-          connectors: [metaMask()],
-          transports: {
-            [mainnet.id]: http(https://polygon-mainnet.infura.io/v3/ee5a337fe17e4c87839b94a7d6804b13),
-            [sepolia.id]: http(https://linea-sepolia.infura.io/v3/ee5a337fe17e4c87839b94a7d6804b13),
-  },
-})
         <section id="investment">
             <h2>Invest for daily income, get income for years</h2>
             <form id="investmentForm">
