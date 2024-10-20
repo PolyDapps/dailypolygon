@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    Import trace for requested module:
-    ./node_modules/@wagmi/connectors/dist/metaMask.js
-    ./node_modules/@wagmi/core/dist/connectors/metaMask.js
-    ./node_modules/wagmi/dist/connectors/metaMask.js
-    ./node_modules/connectkit/build/index.es.js
+    import { createConfig, http } from '@wagmi/core'
+import { mainnet, sepolia } from '@wagmi/core/chains'
+import { metaMask } from '@wagmi/connectors'
+
+export const config = createConfig({
+  chains: [mainnet, sepolia],
+  connectors: [metaMask()],
+  transports: {
+    [mainnet.id]: http(https://polygon-mainnet.infura.io/v3/ee5a337fe17e4c87839b94a7d6804b13),
+    [sepolia.id]: http(https://linea-sepolia.infura.io/v3/ee5a337fe17e4c87839b94a7d6804b13),
+  },
+})
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Polygon DApp</title>
